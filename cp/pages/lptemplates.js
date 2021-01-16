@@ -103,7 +103,7 @@ export default function Lptemplate() {
                                                 {tpl.Status == 0 &&
                                                     <i onClick={e => { e.stopPropagation(); deleteTemplate(tpl.Name) }} className="ion-ios-close-outline ng-scope"></i>
                                                 }
-                                                <a href={`/edit?tpl=${tpl.Name}`} className="change-userpic" >{tpl.Name} </a>
+                                                <a className="change-userpic" >{tpl.Name} </a>
                                             </div>
                                             {(tpl.Status == 0) &&
                                                 <button key={tpl.ID} type="button" onClick={() => submitTemplate(tpl.Name)} className="btn btn-default m-auto my-4">
