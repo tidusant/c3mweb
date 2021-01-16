@@ -57,7 +57,6 @@ jobs:
           fi          
       - name: build
         run: | 
-          echo ${{check.outputs.apppath}} 
           echo ${{outputs.apppath}} 
           
   build:
