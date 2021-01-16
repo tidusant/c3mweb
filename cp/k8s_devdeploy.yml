@@ -53,5 +53,5 @@ spec:
     - name: c3mweb-cp-port
       protocol: TCP
       port: 80
-      nodePort: 30080 #must be between 30000 - 32767
+      nodePort: 30080 #must be between 30000 - 32767 merge
   
