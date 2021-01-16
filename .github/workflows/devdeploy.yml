@@ -54,11 +54,9 @@ jobs:
           else            
             echo "not a DEPLOY command"
             echo "::set-output name=isdeploy::false"
-          fi
-          
+          fi          
       - name: build
         run: | 
-          echo ${{steps.check.outputs.apppath}} 
           echo ${{check.outputs.apppath}} 
           echo ${{outputs.apppath}} 
           
