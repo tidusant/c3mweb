@@ -1,6 +1,6 @@
 var crypto=require("./crypto")
 const fetch = require('node-fetch');
-const apiUrl = process.env.API_URL || "http://127.0.0.1:8081";
+const apiUrl = process.env.API_URL || "http://127.0.0.1:8081/";
 exports.GetData=async function(requestUrl, params, sex) {
     //cannot use dispatch in this function
     let rs = { Status: 0, Error: "", Message: "", Data: {} }
@@ -8,7 +8,7 @@ exports.GetData=async function(requestUrl, params, sex) {
         console.log("call: "+ requestUrl + " data:" + params + " - " + sex)
 
         try {
-            const res = await fetch(apiUrl+"/" + crypto.encDat2(requestUrl, 7), {
+            const res = await fetch(apiUrl + crypto.encDat2(requestUrl, 7), {
                 method: 'POST',
                 body: "data=" + crypto.encDat2(sex + "|" + params, 9),
                 headers: {
