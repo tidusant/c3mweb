@@ -56,11 +56,10 @@ jobs:
             echo "::set-output name=isdeploy::false"
           fi    
   
-#      - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
       - name: test
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}     
         run: | 
-          git checkout
           cd ${{steps.checkdeploy.outputs.apppath}}
           npm test
       - name: build
