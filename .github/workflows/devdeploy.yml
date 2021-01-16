@@ -1,0 +1,94 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Dev Deployment
+env:
+  SERVER: colis-dev
+  PREFIX: c3mweb
+  COMMIT_FILTER: DEPLOY
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch  
+  push:
+#    branches: [ master ]
+    paths-ignore:
+    #- '.github/**'
+    - 'README.md'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+ 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+       
+  check:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      isdeploy: ${{steps.check.outputs.isdeploy}}
+      apppath: ${{steps.check.outputs.apppath}}  
+      appname: ${{steps.check.outputs.appname}}  
+      branch: ${{steps.check.outputs.branch}}
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - id: check
+        name: check is Deploy    
+        run: | 
+          echo ${GITHUB_EVENT_PATH}
+          echo ${GITHUB_WORKSPACE}
+          #Set branch name
+          echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
+          # Get last commit message
+          readonly local last_commit_log="${{github.event.head_commit.message}}"
+          echo "last commit log: $last_commit_log"
+          
+          #readonly local result=$(echo "$last_commit_log" | grep -E "^${COMMIT_FILTER}" )
+          readonly local result1=$(echo "$last_commit_log" | cut -d" " -f1 )
+          readonly local result2=$(echo "$last_commit_log" | cut -d" " -f2 )
+
+          if [ "$result1" == ${COMMIT_FILTER} ]; then            
+            echo "the last commit log contains \"$COMMIT_FILTER\", start building"            
+            echo "::set-output name=isdeploy::true"
+            echo "::set-output name=apppath::$result2"
+            echo "::set-output name=appname::${result2//\//\-}"
+            ${SLACK_COMMAND} "{\"text\":\"${{env.PREFIX}} $result2 Start deploy !\"}" ${{secrets.SLACK_WEBHOOK_URL}}
+          else            
+            echo "not a DEPLOY command"
+            echo "::set-output name=isdeploy::false"
+          fi
+  build:
+    #if: "true" 
+    if: ${{ contains(needs.check.outputs.isdeploy, 'true') }}
+    #if: ${{needs.check.outputs.isdeploy}} == 'true'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    needs: check
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      # Runs a next build for project
+      - name: Run nextjs test
+        run: |
+          cd ${{needs.check.outputs.apppath}}
+          npm test
+          npm install
+          npm run build
+          echo "====== Docker build ========"
+          echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
+          docker build -t ${{needs.check.outputs.appname}} .
+          docker tag ${{needs.check.outputs.appname}} ${{ secrets.DOCKER_USERNAME }}/${PREFIX}-${{needs.check.outputs.appname}}
+          docker push ${{ secrets.DOCKER_USERNAME }}/${PREFIX}-${{needs.check.outputs.appname}}
+          
+  deploy:
+    if: ${{ contains(needs.check.outputs.isdeploy, 'true') }}
+    # The type of runner that the job will run on
+    runs-on: self-hosted
+    needs: [check,build]
+    steps:
+    - name: Kubernetes deploy
+      run: |
+        sudo kubectl apply -f https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${{needs.check.outputs.branch}}/${{needs.check.outputs.apppath}}/k8s_devdeploy.yml
+        #force pull latest image
+        sudo kubectl -n ${SERVER} rollout restart deploy ${PREFIX}-${{needs.check.outputs.appname}}
