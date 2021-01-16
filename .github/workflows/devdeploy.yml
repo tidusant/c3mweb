@@ -5,6 +5,7 @@ env:
   SERVER: colis-dev
   PREFIX: c3mweb
   COMMIT_FILTER: DEPLOY
+  API_URL: ${{ secrets.API_URL }}
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch  
@@ -61,13 +62,12 @@ jobs:
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}     
         run: | 
           cd ${{steps.checkdeploy.outputs.apppath}}
+          npm install
           npm test
       - name: build
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}
         run: | 
           cd ${{steps.checkdeploy.outputs.apppath}}
-          npm install
-          npm run build
           echo "====== Docker build ========"
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
           docker build -t ${{steps.checkdeploy.outputs.appname}} .
