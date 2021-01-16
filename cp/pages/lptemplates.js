@@ -5,7 +5,7 @@ import Loading from '../components/loading'
 import { checkAuth } from '../components/data'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
-
+import { encDat2, decDat } from "../components/crypto";
 
 import { GetData } from "../components/data";
 import { toast } from "react-toastify";
@@ -96,7 +96,7 @@ export default function Lptemplate() {
                                 <div className="ng-scope">
                                     {state.Ptemplates && state.Ptemplates.length > 0 && state.Ptemplates.map((tpl) =>
                                         <div key={tpl.Name} className="mx-5 my-12 float-left">
-                                            <div className="userpic" onClick={() => { window.location = process.env.NEXT_PUBLIC_TESTLP_URL+`test/edit/${tpl.Path}` }}>
+                                            <div className="userpic" onClick={() => { window.location = process.env.NEXT_PUBLIC_TESTLP_URL+`test/edit/${encDat2(useState.token+"|"+tpl.Path)}` }}>
                                                 <div className="userpic-wrapper">
                                                     <img src={process.env.NEXT_PUBLIC_TESTLP_URL+`templates/${tpl.Path}/screenshot.jpg`} />
                                                 </div>
