@@ -39,7 +39,7 @@ export async function GetData(requestUrl, params, userstate) {
                 
             }
             //parse to json object
-            
+            console.log("data return:",data)
             let rtdata = {};
             try {
                 rtdata = JSON.parse(data)
