@@ -31,7 +31,7 @@ jobs:
       branch: ${{steps.check.outputs.branch}}
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - id: check
+      - id: checkdeploy
         name: check is Deploy    
         run: | 
           echo ${GITHUB_EVENT_PATH}
@@ -57,7 +57,7 @@ jobs:
           fi          
       - name: build
         run: | 
-          echo ${{outputs.apppath}} 
+          echo ${{steps.checkdeploy.outputs.apppath}} 
           
   build:
     #if: "true" 
