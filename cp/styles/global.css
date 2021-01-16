@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body, figure {
+    margin: 0;
+}
+body, html {
+    min-height: 100%;
+    min-width: 320px;
+}
+
+body {
+    scrollbar-face-color: #d9d9d9;
+    scrollbar-track-color: transparent;
+    font: 14px/16px Roboto,sans-serif;
+    color: #fff;
+    background-color: #f0f3f4;
+    font-family: helvetica neue,Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    display: block;
+    margin: 8px;
+}
+
+body.blur-theme::before {
+    position: fixed;
+    background: url(../public/blur-bg.jpg) center center no-repeat;
+    background-size: cover;
+}
+body.blur-theme::before, body.mobile.blur-theme .body-bg::before {
+    content: '';
+    height: 100%;
+    top: 0;
+    left: 0;
+    will-change: transform;
+    z-index: -1;
+    width: 100%;
+}
+#__next{
+    height:100%;
+}
