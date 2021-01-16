@@ -70,6 +70,7 @@ jobs:
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}
         run: | 
           cd ${{steps.checkdeploy.outputs.apppath}}
+          npm run build
           echo "====== Docker build ========"
           echo ${{ secrets.DOCKER_TOKEN }} | docker login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin 
           docker build -t ${{steps.checkdeploy.outputs.appname}} .
