@@ -11,7 +11,7 @@ metadata:
   labels:
     app: c3mweb-cp
 spec:
-  replicas: 3 #We always want more than 1 replica for HA
+  replicas: 3 #We always want more than 1 replica for deploy
   selector:
     matchLabels:
       app: c3mweb-cp
