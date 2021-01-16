@@ -65,6 +65,7 @@ jobs:
       - name: build
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}
         run: | 
+          cd ${{steps.checkdeploy.outputs.apppath}}
           npm install
           npm run build
           echo "====== Docker build ========"
