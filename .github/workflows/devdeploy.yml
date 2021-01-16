@@ -62,7 +62,7 @@ jobs:
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}     
         run: | 
           cd ${{steps.checkdeploy.outputs.apppath}}
-          npm install
+          npm ci --only=production
           npm test
       - name: build
         if: ${{ contains(steps.checkdeploy.outputs.isdeploy, 'true') }}
