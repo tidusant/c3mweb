@@ -11,7 +11,7 @@ metadata:
   labels:
     app: c3mweb-cp
 spec:
-  replicas: 3 #We always want more than 1 replica for t
+  replicas: 3 #We always want more than 1 replica for
   selector:
     matchLabels:
       app: c3mweb-cp
