@@ -6,7 +6,8 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build && next export",
     "start": "next start -p $PORT",
-    "debug": "node --inspect-brk ./node_modules/next/dist/bin/next"
+    "debug": "node --inspect-brk ./node_modules/next/dist/bin/next",
+    "test":"echo \"not deploy yet\""
   },
   "dependencies": {
     "autoprefixer": "^10.0.4",
