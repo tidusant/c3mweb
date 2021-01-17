@@ -101,7 +101,7 @@ exports.purge = async function (req, res) {
                         
                         return cssmap[g2]?g1+`("${cssmap[g2]}")`:match
                     })
-                    regexp = /(className=["']|\.attr\(["']class["'],["']|setAttribute\(["']class["'],["'])(.*?)(["'])/g;
+                    regexp = /(querySelector\(["'].*?\.|querySelectorAll\(["'].*?\.|className=["']|\.attr\(["']class["'],["']|setAttribute\(["']class["'],["'])(.*?)(["'])/g;
                     jsmin=jsmin.replace(regexp, (match, g1,g2,g3) => {
                         const rs=[];
                         console.log(match,g1,g2,g3)
