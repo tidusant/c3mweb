@@ -134,13 +134,11 @@ export default function Lptemplate() {
                                 <div className="ng-scope">
                                     {state.Ptemplates && state.Ptemplates.length > 0 && state.Ptemplates.map((tpl) =>
                                         <div key={tpl.Name} className="mx-5 my-12 float-left">
-                                            <div className="userpic" onClick={() => { window.location = process.env.NEXT_PUBLIC_TESTLP_URL + `test/edit/${encDat2(Cookies.get('_s') + "|" + tpl.Path)}` }}>
+                                            <div className="userpic" onClick={() => { window.open(process.env.NEXT_PUBLIC_TESTLP_URL + `test/edit/${encDat2(Cookies.get('_s') + "|" + tpl.Path)}`) }}>
                                                 <div className="userpic-wrapper">
                                                     <img src={process.env.NEXT_PUBLIC_TESTLP_URL + `templates/${tpl.Path}/screenshot.jpg`} />
                                                 </div>
-                                                {tpl.Status == 0 &&
-                                                    <i onClick={e => { e.stopPropagation(); deleteTemplate(tpl.Name) }} className="ion-ios-close-outline ng-scope"></i>
-                                                }
+                                              
                                                 <a className="change-userpic" >{tpl.Name} - {tpl.User} </a>
                                             </div>
 
@@ -173,9 +171,7 @@ export default function Lptemplate() {
                                                 <div className="userpic-wrapper">
                                                     <img src={process.env.NEXT_PUBLIC_TESTLP_URL + `templates/${tpl.Path}/screenshot.jpg`} />
                                                 </div>
-                                                {tpl.Status == 0 &&
-                                                    <i onClick={e => { e.stopPropagation(); deleteTemplate(tpl.Name) }} className="ion-ios-close-outline ng-scope"></i>
-                                                }
+                                               
                                                 <a className="change-userpic" >{tpl.Name} - {tpl.User} </a>
                                             </div>
 
