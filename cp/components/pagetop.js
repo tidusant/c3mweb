@@ -2,7 +2,7 @@
 
 export default function PageTop() {
     return <div className="page-top clearfix" >
-    <a href="#/dashboard" className="al-logo clearfix"><span>Blur</span>Admin</a>
+    <a href="#/dashboard" className="al-logo clearfix"><span>C3M</span>Admin</a>
     <a className="collapse-menu-link ion-navicon"> </a>
 
 
