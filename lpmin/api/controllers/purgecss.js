@@ -82,7 +82,7 @@ exports.purge = async function (req, res) {
                 .on('data', (data) => { bl2.append(data) })
                 .on('end', () => {
                     //minify css                    
-                    fs.writeFileSync(outFolder + 'style.css', csso.minify(bl2.toString()).css);
+                    fs.writeFileSync(outFolder + 'style.css', csso.minify(bl2.toString()).css,{ mode: '655' });
                     //minify js
                     var jsmin = ``
                     const files = fs.readdirSync(buildFolder)
@@ -163,7 +163,7 @@ exports.purge = async function (req, res) {
                                 removeComments: true,
                                 removeTagWhitespace: true
                             })
-                            fs.writeFileSync(outFolder + 'index.html', html);
+                            fs.writeFileSync(outFolder + 'index.html', html, { mode: '655' });
                         })
                 })
             
