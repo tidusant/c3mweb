@@ -1,5 +1,4 @@
 
-import {  useDispatch } from 'react-redux'
 import {  SafeRedirect } from "../components/data";
 export default function Logout() {
   
