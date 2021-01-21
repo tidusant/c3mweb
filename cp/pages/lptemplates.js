@@ -166,7 +166,7 @@ export default function Lptemplate() {
                             <div className="panel-body text-center">
                                 <div className="ng-scope">
                                     {state.Atemplates && state.Atemplates.length > 0 && state.Atemplates.map((tpl) =>
-                                        <div key={tpl.Name} className="mx-5 my-12 float-left">
+                                        <div key={tpl.ID} className="mx-5 my-12 float-left">
                                             <div className="userpic" onClick={() => { window.open(process.env.NEXT_PUBLIC_TESTLP_URL + `templates/${tpl.Path}/out/`) }}>
                                                 <div className="userpic-wrapper">
                                                     <img src={process.env.NEXT_PUBLIC_TESTLP_URL + `templates/${tpl.Path}/screenshot.jpg`} />
