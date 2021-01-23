@@ -31,11 +31,11 @@ export async function GetData(requestUrl, params, userstate) {
             //get data and decode
             let data = ""
             try {
-                data = decDat(datatext);
+                data = decDat(datatext,true);
             }
             catch (ex) {
                 console.log("error in first dec:",ex.message)
-                    data = decDat(datatext, true);
+                    
                 
             }
             //parse to json object
