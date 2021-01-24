@@ -3,7 +3,9 @@ import Cookies from 'js-cookie'
 import Router from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 
-export async function GetData(requestUrl, params, userstate) {
+export async function GetData(requestUrl, params, userstate,decompress) {
+    // default decompress is false
+    decompress = decompress || false
     //cannot use dispatch in this function
     let rs = { Status: 0, Error: "", Message: "", Data: {} }
     let sex = Cookies.get("_s")
@@ -31,12 +33,13 @@ export async function GetData(requestUrl, params, userstate) {
             //get data and decode
             let data = ""
             try {
-                data = decDat(datatext,true);
+                if (decompress)
+                    data = decDat(datatext, true);
+                else
+                    data = decDat(datatext);
             }
             catch (ex) {
-                console.log("error in first dec:",ex.message)
-                    
-                
+                console.log(ex.message)
             }
             //parse to json object
             console.log("data return:",data)
