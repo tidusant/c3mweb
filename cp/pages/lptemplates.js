@@ -42,7 +42,6 @@ export default function Lptemplate() {
             switch (state.nextAction) {
                 case "get":
                     GetData("lptpl", `lat`, userstate).then(rs => {
-
                         if (rs.Status === 1) {
                             try {
                                 const data = JSON.parse(rs.Data)
