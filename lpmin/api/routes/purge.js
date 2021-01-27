@@ -4,6 +4,7 @@ module.exports = function(app) {
 
   // todoList Routes
   app.post('/purge/:params',nodeCtrl.purge);
+  app.post('/publish/:params',nodeCtrl.publish);
     
 
 

@@ -84,10 +84,10 @@ exports.decDat= function(data, div) {
         }
         base64 = base64.substr(0, base64.length - x2);
         //console.log("base64",base64)
-        if (div==2) {
+        //if (div==2) {
             data = LZString.dfb64(base64);
-        }
-        else data = base64decode(base64);
+        // }
+        // else data = base64decode(base64);
 
         return data;
     }
