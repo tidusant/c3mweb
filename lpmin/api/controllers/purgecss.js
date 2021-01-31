@@ -80,7 +80,7 @@ exports.publish = async function (req, res) {
         }
         const sex = args[0]
         const lppath = args[1]
-        const favicon=args[2]
+        const favicon=crypto.base64decode(args[2])
         rs = await mydata.GetData("aut", "t",crypto.encDat2(sex))
         if (rs.Status == 1) {
             try {
@@ -193,7 +193,7 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
         return g1+rsClass.join(" ")+g3
     })
     var faviconmeta=``
-    if(favicon){
+    if(favicon&&favicon.trim()!=""){
         var icontype=`image/x-icon`
         var iconext=favicon.substr(favicon.indexOf("."))
         if(iconext==".gif"){
