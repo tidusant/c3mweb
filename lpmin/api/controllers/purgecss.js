@@ -73,14 +73,14 @@ exports.publish = async function (req, res) {
         
         const tplpath = req.params.params && crypto.decDat(req.params.params, 3) || ""
         const args = (req.body.data && crypto.decDat(req.body.data, 3) || "").split(",")
-        if (args.length < 2) {
+        if (args.length < 3) {
             rs.Error = "Invalid params"
             res.send(crypto.encDat2(JSON.stringify(rs)))            
             return
         }
         const sex = args[0]
         const lppath = args[1]
-        
+        const favicon=args[2]
         rs = await mydata.GetData("aut", "t",crypto.encDat2(sex))
         if (rs.Status == 1) {
             try {
@@ -107,7 +107,7 @@ exports.publish = async function (req, res) {
                 rs.Status = 0
                 rs.Error = "template build folder not exist"
             } else {
-                await build(buildFolder, outFolder,outFolder + 'content.html')
+                await build(buildFolder, outFolder,outFolder + 'content.html',favicon)
                 console.log("waiting")
             }
         }
@@ -121,7 +121,7 @@ exports.publish = async function (req, res) {
 
 };
 
-async function build(buildFolder, outFolder,contentfile) {
+async function build(buildFolder, outFolder,contentfile,favicon) {
     //remove unused css
     const purgeCSSResults = await new purgecss.PurgeCSS().purge({
         content: [contentfile, buildFolder + 'js/*.js'],
@@ -192,11 +192,27 @@ async function build(buildFolder, outFolder,contentfile) {
         }
         return g1+rsClass.join(" ")+g3
     })
+    var faviconmeta=``
+    if(favicon){
+        var icontype=`image/x-icon`
+        var iconext=favicon.substr(favicon.indexOf("."))
+        if(iconext==".gif"){
+            icontype=`image/gif`
+        }else if(iconext==".png"){
+            icontype=`image/png`
+        }else if(iconext==".jpeg"||iconext==".jpg"){
+            icontype=`image/jpeg`
+        }else if(iconext==".webp"){
+            icontype=`image/webp`
+        }
+        faviconmeta=`<link rel="icon" href="${favicon}" type="${icontype}" /><link rel="shortcut icon" href="${favicon}" type="${icontype}" />`
+    }
     var htmlcontent=`<!DOCTYPE html>
     <html lang="en">
     <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    ${faviconmeta}
     <title>Landing page test</title>
     <link href="style.css" rel="stylesheet">
     </head>
