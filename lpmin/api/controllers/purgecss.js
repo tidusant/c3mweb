@@ -52,7 +52,7 @@ exports.purge = async function (req, res) {
                 //creat output folder
                 fs.rmdirSync(outFolder, { recursive: true })
                 fs.mkdirSync(outFolder)
-                await build(buildFolder, outFolder,buildFolder + 'content.html')
+                await build(buildFolder, outFolder,buildFolder + 'build/content.html')
 
             }
         }
