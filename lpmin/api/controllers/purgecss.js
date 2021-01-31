@@ -149,11 +149,11 @@ async function build(buildFolder, outFolder,contentfile) {
     fs.writeFileSync(outFolder + 'style.css', csso.minify(csscontent).css, { mode: '655' });
     //minify js
     var jsmin = ``
-    const files = fs.readdirSync(buildFolder)
+    const files = fs.readdirSync(buildFolder+"js/")
     for (let i = 0, n = files.length; i < n; i++) {
         const file = files[i]
         if (file.substr(file.length - 3, 3) == ".js") {
-            jsmin += UglifyJS.minify(fs.readFileSync(buildFolder + "/" + file, "utf8")).code
+            jsmin += UglifyJS.minify(fs.readFileSync(buildFolder + "js/" + file, "utf8")).code
         }
     }
 
