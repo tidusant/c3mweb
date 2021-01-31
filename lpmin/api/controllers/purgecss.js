@@ -43,9 +43,9 @@ exports.purge = async function (req, res) {
             }
         }
         if (rs.Status == 1) {
-            const buildFolder = `templates/${tplname}/build/`
+            const buildFolder = `templates/${tplname}/`
             const outFolder = `templates/${tplname}/out/`
-            if (!fs.existsSync(buildFolder)) {
+            if (!fs.existsSync(buildFolder+"build/")) {
                 rs.Status = 0
                 rs.Error = "template build folder not exist"
             } else {
@@ -100,10 +100,10 @@ exports.publish = async function (req, res) {
             }
         }
         if (rs.Status == 1) {
-            const buildFolder = `templates/${tplpath}/build/`
+            const buildFolder = `templates/${tplpath}/`
             const outFolder = `templates/${tplpath}/publish/${lppath}/`
 
-            if (!fs.existsSync(buildFolder)) {
+            if (!fs.existsSync(buildFolder+"build/")) {
                 rs.Status = 0
                 rs.Error = "template build folder not exist"
             } else {
@@ -124,8 +124,8 @@ exports.publish = async function (req, res) {
 async function build(buildFolder, outFolder,contentfile) {
     //remove unused css
     const purgeCSSResults = await new purgecss.PurgeCSS().purge({
-        content: [contentfile, buildFolder + '*.js'],
-        css: [buildFolder + '*.css'],
+        content: [contentfile, buildFolder + 'js/*.js'],
+        css: [buildFolder + 'css/*.css'],
         extractors: [
             {
                 extractor: content => {
