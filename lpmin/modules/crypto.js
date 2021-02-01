@@ -30,13 +30,13 @@ exports.encDat2= function(data, oddnumber) {
 
     let x = this.makeid(oddnumber);
     // mylog('random x string:'+x);
-    let y = base64encode(x);
+    let y = this.base64encode(x);
     y = y.replace(/=/g, "");
     // mylog('yb64:'+y);
     data = data.substring(0, l) + y + data.substring(l);
     // mylog('datay:'+data);
     //data=LZString["compressToBase64"](data);
-    data = base64encode(data);
+    data = this.base64encode(data);
     //mylog("lzjs: "+detailurl);
     //data=data.replace(/===/g,"A==");
     data = data.replace(/=/g, "");
@@ -56,7 +56,7 @@ exports.decDat= function(data, div) {
     let x2 = key.substr(l, 2);
     key = key.substr(0, l) + key.substr(l + 2);
     //console.log("num: "+num);
-    x2 = base64decode(x2) * 1;
+    x2 = this.base64decode(x2) * 1;
 
     //console.log("x2: "+x2);
     if (x2 > 0) {
