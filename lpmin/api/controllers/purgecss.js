@@ -175,10 +175,14 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
     })
     
 
-    //replace tailwindcss special char in html
-    regexp = /(class=['"])(.*?)(['"])/g;
+    
     contentfile=fs.readFileSync(contentfile, "utf8")
+    //remove html trash and contenteditable property
     contentfile=contentfile.replace(/contenteditable=\"true\"/g,"")
+    contentfile=contentfile.replace(/<div class=\"landingpage-trash.*?".*?<\/div>.*?<\/div>/gms,"")
+
+    //replace tailwindcss special char in html
+    regexp = /(class=['"])(.*?)(['"])/gms;
     contentfile = contentfile.replace(regexp, (match, g1, g2, g3) => {
         return g1+g2.replace(/:/g, "--").replace(/\//g, "-div-")+g3
     })
@@ -207,6 +211,8 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
         }
         faviconmeta=`<link rel="icon" href="${favicon}" type="${icontype}" /><link rel="shortcut icon" href="${favicon}" type="${icontype}" />`
     }
+
+
     var htmlcontent=`<!DOCTYPE html>
     <html lang="en">
     <head>
