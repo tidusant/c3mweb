@@ -1,6 +1,13 @@
 var crypto=require("./crypto")
 const fetch = require('node-fetch');
 const apiUrl = process.env.API_URL || "http://127.0.0.1:8081/";
+const wapiUrl = process.env.WAPI_URL || "http://127.0.0.1:8083/";
+exports.GetAPIURL=function(){
+    return apiUrl;
+}
+exports.GetWAPIURL=function(){
+    return wapiUrl;
+}
 exports.GetData=async function(requestUrl, params, sex) {
     //cannot use dispatch in this function
     let rs = { Status: 0, Error: "", Message: "", Data: {} }
@@ -24,9 +31,7 @@ exports.GetData=async function(requestUrl, params, sex) {
                 console.log("data return: ",data)
             }
             catch (ex) {
-                console.log("error in first dec:",ex.message)
-                    data = crypto.decDat(datatext, 2);
-                
+                console.log("error in decode:",ex.message)
             }
             //parse to json object
             

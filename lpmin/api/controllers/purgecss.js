@@ -22,7 +22,7 @@ exports.purge = async function (req, res) {
         const encryptedsex = req.body.data && crypto.decDat(req.body.data, 3) || ""
 
         rs = await mydata.GetData("aut", "t", encryptedsex)
-
+        
 
         if (rs.Status == 1) {
             try {
@@ -148,12 +148,229 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
     //minify css                    
     fs.writeFileSync(outFolder + 'style.css', csso.minify(csscontent).css, { mode: '655' });
     //minify js
-    var jsmin = ``
+    var jsmin = `
+    var caesarShift = function (str, amount) {
+        // Wrap the amount
+        if (amount < 0) {
+          return caesarShift(str, amount + 26);
+        }
+        amount=amount%25;
+        if(amount==0)amount=1;
+      
+        // Make an output variable
+        var output = "";
+      
+        // Go through each character
+        for (var i = 0; i < str.length; i++) {
+          // Get the character we'll be appending
+          var c = str[i];
+      
+          // If it's a letter...
+          if (c.match(/[a-z]/i)) {
+            // Get its code
+            var code = str.charCodeAt(i);
+      
+            // Uppercase letters
+            if (code >= 65 && code <= 90) {
+              c = String.fromCharCode(((code - 65 + amount) % 26) + 65);
+            }
+      
+            // Lowercase letters
+            else if (code >= 97 && code <= 122) {
+              c = String.fromCharCode(((code - 97 + amount) % 26) + 97);
+            }
+          }
+      
+          // Append
+          output += c;
+        }
+      
+        // All done!
+        return output;
+      };
+      function base64encode(input){
+        if(typeof(input)==="undefined"||input.trim()=="")return input;
+        return btoa( unescape( encodeURIComponent( input ) ) ).replace(/=/g, "");
+    }
+    function base64decode(input){
+        if (typeof(input)==="undefined" || input === null || input.trim() === "") return "";
+        return decodeURIComponent( escape( atob( input ) ) );
+    }
+    function ranstring(num) {
+        let text = "";
+        let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    
+        for (let i = 0; i < num; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+    
+        return text;
+    }
+    function encodeW(data,key){
+        if(typeof(data)==="undefined"||data.trim()=="")return data;
+        key=key||"";
+        key=key.trim();
+        if(key.length<2)key="abc";
+        data+=key;
+        
+        var x=Math.floor((Math.random() * 8) + 2);            
+        var xstr=ranstring(x);
+        data=base64encode(data)
+        data=xstr+data;
+        data=caesarShift(data,key.length);
+        var x2=base64encode(x+"");
+        data = data.substr(0,x) + xstr + data.substr(x);
+        data = data.substr(0,data.length/2) + x2 + data.substr(data.length/2);
+        return data;
+    }
+
+    function decodeW2(data,key){
+        if(!data||data.trim()=="")return data;
+        key=key.trim();
+        if(key.length<2)key="xyz";
+        key="<<"+key+">>";
+        key=base64encode(key);
+        data=data.replace(key,"");
+        var l=key.length;
+        if (l*2 > data.length) {
+            l = data.length - l
+        }
+        data = data.substr(0,l) + data.substr(l+key.length);
+        data=base64decode(data)
+        return data;
+    }
+
+      
+    //============ lib
+    // Check browser support storage
+      var isStorage=typeof(Storage) !== "undefined"||false;
+      function getStorage(key){
+          if(isStorage){
+            return localStorage.getItem(key);
+          }else{
+            return getCookie(key);
+          }
+      }
+      function setStorage(key,value,exminute){
+        if(isStorage){
+          localStorage.setItem(key,value);
+        }else{
+          setCookie(key,value,exminute);
+        }
+    }
+
+      function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+          var c = ca[i];
+          while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+          }
+          if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+          }
+        }
+        return "";
+      }
+
+      function setCookie(cname, cvalue, exminute) {
+        var d = new Date();
+        exminute=exminute||30;
+        d.setTime(d.getTime() + (exminute*60*1000));
+        var expires = "expires="+ d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+      
+      
+
+        //=========== function
+        var sex="";
+        var apiUrl="${mydata.GetWAPIURL()}";
+        async function  GetData(requestUrl,params){
+            let rs = { Status: 0, Error: "", Message: "", Data: {} }
+            params=params==null?"":params;
+            console.log("call: "+ requestUrl + " data:" + params + " - " + sex)
+
+            try {
+                const requestUri=encodeW(requestUrl,window.location.host)                
+                const res = await fetch(apiUrl + requestUri, {
+                    method: 'POST',
+                    body: "data=" + encodeW(sex + "|" + params,requestUri),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                const datatext = await res.text();
+                
+                //get data and decode
+                let data = ""
+                try {                    
+                    data =decodeW2(datatext,requestUri);
+                    console.log("data return: ",data)
+                }
+                catch (ex) {
+                    console.log("error in decode:",ex.message)
+                }
+                //parse to json object
+                
+                let rtdata = {};
+                try {
+                    rtdata = JSON.parse(data)
+                    if (rtdata.Status !== undefined) rs.Status = rtdata.Status;
+                    if (rtdata.Error !== undefined) rs.Error = rtdata.Error;
+                    if (rtdata.Message !== undefined) rs.Message = rtdata.Message;
+                    if (rtdata.Data !== undefined) rs.Data = rtdata.Data;
+                } catch (ex) {
+                    rs.Error = ex.message;
+                }
+                if (rtdata.Status === 1) {
+                    if (sex) setStorage("_x", encodeW(sex));
+                }
+            
+            } catch (error) {
+                rs.Error = error.message;
+            }
+        
+            return Promise.resolve(rs);
+        }
+
+        function serverSubmit(){
+            const data=JSON.stringify({name:document.querySelector("#name"),phone:document.querySelector("#phone"),email:document.querySelector("#email"),message:document.querySelector("#message")})
+            GetData("lead","s|"+base64encode(data)).then(rs => {
+                console.log("data return", rs)
+                if (rs.Status === 1) {
+                  try {
+                    
+                  } catch (e) {
+                    showMessage("error",e.message,"error");
+                  }
+                } else {
+                    showMessage("error",rs.Error,"error");
+                }
+                
+            })
+        }
+
+        window.onload = function(e) {
+            GetData("i",getStorage("_x")).then(rs => {
+                console.log("data return", rs)
+                if (rs.Status === 1) {
+                    sex=rs.Data
+                  setStorage("_x",encodeW(rs.Data,window.location.host))
+                } else {
+                    console.log(rs.Error)
+                }
+                
+            })
+        }
+
+      `
     const files = fs.readdirSync(buildFolder+"js/")
     for (let i = 0, n = files.length; i < n; i++) {
         const file = files[i]
         if (file.substr(file.length - 3, 3) == ".js") {
-            jsmin += UglifyJS.minify(fs.readFileSync(buildFolder + "js/" + file, "utf8")).code
+            jsmin += fs.readFileSync(buildFolder + "js/" + file, "utf8")
         }
     }
 
@@ -173,7 +390,17 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
         })
         return g1 + rs.join(" ") + g3
     })
-    
+    var options = {
+        // sourceMap: {
+        //     filename: "out.js",
+        //     url: "out.js.map"
+        // },
+        mangle: {
+            toplevel: true,            
+        },
+        nameCache: {}
+    };    
+    jsmin = UglifyJS.minify(jsmin,options).code
 
     
     contentfile=fs.readFileSync(contentfile, "utf8")
@@ -225,6 +452,7 @@ async function build(buildFolder, outFolder,contentfile,favicon) {
     ${contentfile}
     <script>${jsmin}</script></body></html>
     `    
+    
     htmlcontent = htmlmin.minify(htmlcontent, {
                         collapseWhitespace: true,
                         removeEmptyAttributes: true,
