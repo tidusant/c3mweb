@@ -35,6 +35,8 @@ spec:
           env:
             - name: API_URL
               value: "http://c3m-api-service:8081/"
+            - name: WAPI_URL
+              value: "http://c3m-wapi-service:8083/"
           
          
 ---
