@@ -45,6 +45,7 @@ exports.purge = async function (req, res) {
         if (rs.Status == 1) {
             const buildFolder = `templates/${tplname}/`
             const outFolder = `templates/${tplname}/out/`
+            
             if (!fs.existsSync(buildFolder)) {
                 rs.Status = 0
                 rs.Error = "template build folder not exist"
@@ -110,11 +111,12 @@ exports.publish = async function (req, res) {
                 rs.Error = e.message
             }
         }
+        console.log(builddata.OutFolder)
         if (rs.Status == 1) {
-            if (!fs.existsSync(builddata.buildFolder )) {
+            if (!fs.existsSync(builddata.BuildFolder )) {
                 rs.Status = 0
                 rs.Error = "template build folder not exist"
-            }if (!fs.existsSync(builddata.outFolder)) {
+            }if (!fs.existsSync(builddata.OutFolder)) {
                 rs.Status = 0
                 rs.Error = "landingpage output folder not exist"
             } else {
