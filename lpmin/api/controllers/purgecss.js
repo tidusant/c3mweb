@@ -86,7 +86,7 @@ exports.publish = async function (req, res) {
         try{
             builddata=JSON.parse(args)
         } catch(e){
-            rs.Error = "Invalid params:"+e.message;
+            rs.Error = "Invalid params:"+e.message + args;
             res.send(crypto.encDat2(JSON.stringify(rs)))
             return
         }
