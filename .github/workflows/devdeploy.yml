@@ -6,6 +6,7 @@ env:
   PREFIX: c3mweb
   COMMIT_FILTER: DEPLOY
   API_URL: ${{ secrets.DEV_API_URL }}
+  WAPI_URL: ${{ secrets.DEV_WAPI_URL }}
   NEXT_PUBLIC_API_URL: ${{ secrets.DEV_API_URL }}
   NEXT_PUBLIC_TESTLP_URL: ${{ secrets.DEV_TESTLP_URL }}
 # Controls when the action will run. 
