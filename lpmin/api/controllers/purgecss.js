@@ -212,11 +212,11 @@ async function build(builddata) {
         return output;
       };
       function base64encode(input){
-        if(typeof(input)==="undefined"||input.trim()=="")return input;
+        if((typeof(input)!=="string"&&typeof(input)!=="number")||input.trim()=="")return "";
         return btoa( unescape( encodeURIComponent( input ) ) ).replace(/=/g, "");
     }
     function base64decode(input){
-        if (typeof(input)==="undefined" || input === null || input.trim() === "") return "";
+        if (typeof(input)!=="string" || input === null || input.trim() === "") return "";
         return decodeURIComponent( escape( atob( input ) ) );
     }
     function ranstring(num) {
@@ -382,10 +382,19 @@ async function build(builddata) {
     //override server function:
     jsmin+=`function serverSubmit(){
         const data=JSON.stringify({OrgID:orgID,CampaignID:campID,Name:document.querySelector("#name").value,Phone:document.querySelector("#phone").value,Email:document.querySelector("#email").value,message:document.querySelector("#message").value})
+        //check multi submit        
+        var lastd=base64decode(getStorage("_s"))
+        
+        if(lastd&&lastd.trim()!=""){
+            if((new Date()-new Date(lastd))<60000){
+                showMessage("Warning","You've just submitted. Please wait after "+(60-parseInt((new Date()-new Date(lastd))/1000))+" seconds","error");
+                return;
+            }
+        }
         GetData("lpl","s|"+base64encode(data)).then(rs => {
             if (rs.Status === 1) {                
                 showMessage("${builddata.SuccessTitle}","${builddata.SuccessMessage}","success")
-              
+                setStorage("_s",base64encode((new Date()).toString()))
             } else {
                 showMessage("${builddata.ErrorTitle}","${builddata.ErrorMessage}"+rs.Error,"error");
             }
