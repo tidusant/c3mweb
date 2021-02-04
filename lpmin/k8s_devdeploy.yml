@@ -34,9 +34,9 @@ spec:
             - containerPort: 8090 #Exposes the port of the container
           env:
             - name: API_URL
-              value: "http://c3m-api-service:8081/"
+              value: "http://c3md.duyhf.com/api/"
             - name: WAPI_URL
-              value: "http://c3m-wapi-service:8083/"
+              value: "http://c3md.duyhf.com/wapi/"
           
          
 ---
