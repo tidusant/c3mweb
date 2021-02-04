@@ -81,6 +81,7 @@ exports.publish = async function (req, res) {
 
         const tplpath = req.params.params && crypto.decDat(req.params.params, 3) || ""
         const args = (req.body.data && crypto.decDat(req.body.data, 3) || "")
+        console.log(args)
         var builddata={}
         try{
             builddata=JSON.parse(args)
