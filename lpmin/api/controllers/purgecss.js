@@ -379,7 +379,7 @@ async function build(builddata) {
         }
     }
 
-    //override server function:
+    //override server function rebuild:
     jsmin+=`function serverSubmit(){
         const data=JSON.stringify({OrgID:orgID,CampaignID:campID,Name:document.querySelector("#name").value,Phone:document.querySelector("#phone").value,Email:document.querySelector("#email").value,message:document.querySelector("#message").value})
         //check multi submit        
