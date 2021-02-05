@@ -467,7 +467,7 @@ async function build(builddata) {
         } else if (iconext == ".webp") {
             icontype = `image/webp`
         }
-        faviconmeta = `<link rel="icon" href="${builddata.Favicon}" type="${icontype}" /><link rel="shortcut icon" href="${favicon}" type="${icontype}" />`
+        faviconmeta = `<link rel="icon" href="${builddata.Favicon}" type="${icontype}" /><link rel="shortcut icon" href="${builddata.Favicon}" type="${icontype}" />`
     }
 
 
