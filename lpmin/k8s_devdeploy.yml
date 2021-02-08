@@ -46,12 +46,12 @@ metadata:
   name: c3mweb-lpmin-service
   namespace: colis-dev
 spec:
-  type: NodePort
+  #type: NodePort
   selector:
     app: c3mweb-lpmin
   ports:
-    - name: c3mweb-lpmin-port
+    - name: http
       protocol: TCP
       port: 8090
-      nodePort: 30090 #must be between 30000 - 32767
+      #nodePort: 30090 #must be between 30000 - 32767
   
